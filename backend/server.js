@@ -56,24 +56,35 @@ io.on("connection", (socket) => {
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
 const allowedOrigins = [
-  process.env.FRONTEND_URL ||
-    "https://fin-flow-7k5w380j2-nihal1616s-projects.vercel.app",
+  process.env.FRONTEND_URL,
+  "https://fin-flow-7k5w380j2-nihal1616s-projects.vercel.app",
+  "https://fin-flow-5mv7idett-nihal1616s-projects.vercel.app",
   "http://localhost:5173",
   "http://localhost:5174",
   "http://localhost:5175",
   "http://127.0.0.1:5173",
 ].filter(Boolean);
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || allowedOrigins.includes(origin)) {
-        return callback(null, true);
-      }
-      return callback(new Error("Not allowed by CORS"));
-    },
-    credentials: true,
-  }),
-);
+
+app.use((req, res, next) => {
+  const origin = req.get("Origin");
+  if (origin && allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Origin, X-Requested-With, Content-Type, Accept, Authorization",
+    );
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
+    );
+  }
+
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(204);
+  }
+  next();
+});
 app.use(express.json());
 app.use(morgan("dev"));
 
