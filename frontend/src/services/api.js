@@ -2,7 +2,7 @@ import axios from "axios";
 
 const baseURL =
   import.meta.env.VITE_API_URL ||
-  "https://fin-flow-2w25mgp51-nihal1616s-projects.vercel.app/api";
+  "https://finflow-g8bp.onrender.com/api";
 const api = axios.create({
   baseURL,
   timeout: 10000,

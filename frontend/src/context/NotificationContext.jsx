@@ -36,7 +36,7 @@ export function NotificationProvider({ children }) {
     if (!user || !token) return;
 
     const socketUrl =
-      import.meta.env.VITE_SOCKET_URL || import.meta.env.VITE_API_URL || "/";
+      import.meta.env.VITE_SOCKET_URL || "https://finflow-g8bp.onrender.com";
     const socket = io(socketUrl, { auth: { token } });
     socketRef.current = socket;
 
