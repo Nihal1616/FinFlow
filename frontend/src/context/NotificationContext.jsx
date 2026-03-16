@@ -25,7 +25,7 @@ export function NotificationProvider({ children }) {
   useEffect(() => {
     if (!user || !token) return;
 
-    const socket = io('/', { auth: { token } });
+    const socket = io("https://finflow-g8bp.onrender.com", { auth: { token } });
     socketRef.current = socket;
 
     socket.on('connect', () => {
