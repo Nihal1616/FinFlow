@@ -57,6 +57,7 @@ io.on("connection", (socket) => {
 // ─── Middleware ───────────────────────────────────────────────────────────────
 const allowedOrigins = [
   process.env.FRONTEND_URL,
+  "https://fin-flow-red.vercel.app",
   "https://fin-flow-7k5w380j2-nihal1616s-projects.vercel.app",
   "https://fin-flow-5mv7idett-nihal1616s-projects.vercel.app",
   "http://localhost:5173",
