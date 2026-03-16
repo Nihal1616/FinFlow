@@ -11,9 +11,19 @@ const app = express();
 const server = http.createServer(app);
 
 // ─── Socket.IO ───────────────────────────────────────────────────────────────
+const socketAllowedOrigins = [
+  process.env.FRONTEND_URL,
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+].filter(Boolean);
 const io = new Server(server, {
   cors: {
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || socketAllowedOrigins.includes(origin))
+        return callback(null, true);
+      return callback(new Error("CORS origin not allowed"));
+    },
     methods: ["GET", "POST"],
   },
 });
@@ -45,9 +55,22 @@ io.on("connection", (socket) => {
 });
 
 // ─── Middleware ───────────────────────────────────────────────────────────────
+const allowedOrigins = [
+  process.env.FRONTEND_URL ||
+    "https://fin-flow-7k5w380j2-nihal1616s-projects.vercel.app",
+  "http://localhost:5173",
+  "http://localhost:5174",
+  "http://localhost:5175",
+  "http://127.0.0.1:5173",
+].filter(Boolean);
 app.use(
   cors({
-    origin: process.env.FRONTEND_URL || "http://localhost:5173",
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error("Not allowed by CORS"));
+    },
     credentials: true,
   }),
 );

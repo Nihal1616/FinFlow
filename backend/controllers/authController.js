@@ -52,7 +52,7 @@ exports.login = async (req, res) => {
     if (!user || !(await user.comparePassword(password))) {
       return res
         .status(401)
-        .json({ success: false, message: "Invalid credentials" });
+        .json({ success: false, message: "Incorrect email/phone or password" });
     }
 
     const token = signToken(user._id);
