@@ -7,54 +7,23 @@ import QRCode from "qrcode";
 import jsQR from "jsqr";
 import { Card, SectionTitle, Button } from "../components/ui";
 
-function drawQR(canvas, userId, name) {
-  const ctx = canvas.getContext("2d");
-  const W = 200;
-  ctx.clearRect(0, 0, W, W);
-  ctx.fillStyle = "#ffffff";
-  ctx.fillRect(0, 0, W, W);
-
-  const size = 10,
-    margin = 20;
-  const cell = Math.floor((W - margin * 2) / size);
-  const seed = userId.split("").reduce((a, c) => a + c.charCodeAt(0), 0);
-
-  ctx.fillStyle = "#1a1a2e";
-  for (let i = 0; i < size; i++) {
-    for (let j = 0; j < size; j++) {
-      const v = (seed * (i + 1) * (j + 3)) % 7;
-      const inCorner =
-        (i < 3 && j < 3) ||
-        (i < 3 && j >= size - 3) ||
-        (i >= size - 3 && j < 3);
-      if (v > 3 || inCorner) {
-        ctx.fillRect(margin + j * cell, margin + i * cell, cell - 1, cell - 1);
-      }
-    }
-  }
-
-  // Corner markers
-  [
-    [0, 0],
-    [0, size - 3],
-    [size - 3, 0],
-  ].forEach(([r, c]) => {
-    const x = margin + c * cell,
-      y = margin + r * cell,
-      s = 3 * cell;
-    ctx.fillStyle = "#6c63ff";
-    ctx.fillRect(x, y, s, s);
-    ctx.fillStyle = "#ffffff";
-    ctx.fillRect(x + 4, y + 4, s - 8, s - 8);
-    ctx.fillStyle = "#6c63ff";
-    ctx.fillRect(x + 8, y + 8, s - 16, s - 16);
+async function drawQR(canvas, user) {
+  const payload = JSON.stringify({
+    identifier: user.email,
+    name: user.name,
   });
-
-  // Center logo text
-  ctx.fillStyle = "#6c63ff";
-  ctx.font = "bold 8px Syne, sans-serif";
-  ctx.textAlign = "center";
-  ctx.fillText("FF", W / 2, W / 2 + 3);
+  try {
+    await QRCode.toCanvas(canvas, payload, {
+      width: 200,
+      margin: 1,
+      color: {
+        dark: "#1a1a2e",
+        light: "#ffffff",
+      },
+    });
+  } catch (err) {
+    console.error("QR draw failed", err);
+  }
 }
 
 export default function QRPay() {
@@ -70,7 +39,7 @@ export default function QRPay() {
 
   useEffect(() => {
     if (canvasRef.current && user) {
-      drawQR(canvasRef.current, user._id, user.name);
+      drawQR(canvasRef.current, user);
     }
     // Fetch other users for simulate scan
     api
@@ -161,11 +130,12 @@ export default function QRPay() {
       stopScan();
       try {
         const payload = JSON.parse(code.data);
-        if (!payload.identifier) throw new Error("invalid payload");
+        const identifier = payload.identifier || payload.email || payload.phone;
+        if (!identifier) throw new Error("invalid payload");
         const recipient = {
           name: payload.name || "Scanned User",
-          email: payload.identifier,
-          phone: payload.identifier,
+          email: identifier,
+          phone: identifier,
         };
         addToast(`Scanned ${recipient.name}`, "success");
         navigate("/app/send", { state: { recipient } });
