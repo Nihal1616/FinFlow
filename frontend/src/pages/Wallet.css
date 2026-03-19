@@ -1,0 +1,153 @@
+/* Wallet Page Styles */
+.wallet-title {
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+}
+
+.wallet-subtitle {
+  color: var(--text2);
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.wallet-container {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.wallet-id {
+  margin-top: 1rem;
+  font-size: 0.72rem;
+  color: rgba(255, 255, 255, 0.4);
+  font-family: Syne, sans-serif;
+  letter-spacing: 0.08em;
+}
+
+.wallet-quick-amounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 1rem;
+}
+
+.wallet-quick-amount-btn {
+  background: transparent;
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 6px 14px;
+  color: var(--text2);
+  cursor: pointer;
+  font-size: 0.82rem;
+  transition: all 0.2s;
+}
+
+.wallet-quick-amount-btn.active {
+  background: rgba(108, 99, 255, 0.2);
+  border-color: var(--accent);
+  color: var(--accent2);
+}
+
+.wallet-add-btn {
+  padding: 0.85rem;
+}
+
+.wallet-stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.wallet-stat-item {
+  display: flex;
+  justify-content: space-between;
+}
+
+.wallet-stat-label {
+  font-size: 0.9rem;
+  color: var(--text2);
+}
+
+.wallet-net-flow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.wallet-net-flow-value {
+  font-weight: 800;
+  font-family: Syne, sans-serif;
+}
+
+.wallet-net-flow-positive {
+  color: var(--green);
+}
+
+.wallet-net-flow-negative {
+  color: var(--red);
+}
+
+.wallet-limits-item {
+  margin-bottom: 16px;
+}
+
+.wallet-limits-header {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 4px;
+}
+
+.wallet-limits-label {
+  font-size: 0.78rem;
+  color: var(--text3);
+}
+
+.wallet-limits-value {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.wallet-security {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.wallet-security-item {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+.wallet-security-check {
+  color: var(--green);
+  font-size: 0.85rem;
+}
+
+.wallet-security-text {
+  font-size: 0.87rem;
+}
+
+/* Mobile responsiveness */
+@media (max-width: 768px) {
+  .wallet-container {
+    gap: 1rem;
+  }
+
+  .wallet-quick-amounts {
+    gap: 6px;
+  }
+
+  .wallet-quick-amount-btn {
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+
+  .wallet-stats {
+    gap: 10px;
+  }
+
+  .wallet-security {
+    gap: 8px;
+  }
+}

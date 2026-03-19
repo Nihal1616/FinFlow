@@ -6,6 +6,7 @@ import api from "../services/api";
 import QRCode from "qrcode";
 import jsQR from "jsqr";
 import { Card, SectionTitle, Button } from "../components/ui";
+import "./QRPay.css";
 
 async function drawQR(canvas, user) {
   const payload = JSON.stringify({
@@ -151,54 +152,21 @@ export default function QRPay() {
 
   return (
     <div className="animate-fade-in">
-      <h1 style={{ fontSize: "1.6rem", marginBottom: 4 }}>QR Pay</h1>
-      <p
-        style={{
-          color: "var(--text2)",
-          marginBottom: "1.5rem",
-          fontSize: "0.9rem",
-        }}
-      >
+      <h1 className="qrpay-title">QR Pay</h1>
+      <p className="qrpay-subtitle">
         Scan or share your QR code to receive payments instantly
       </p>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "1.5rem",
-          maxWidth: 720,
-        }}
-      >
+      <div className="qrpay-grid">
         {/* My QR */}
-        <Card style={{ textAlign: "center" }}>
+        <Card className="qrpay-qr-card">
           <SectionTitle>Your QR Code</SectionTitle>
-          <div
-            style={{
-              background: "#fff",
-              borderRadius: 12,
-              padding: "1rem",
-              display: "inline-block",
-              marginBottom: "1rem",
-            }}
-          >
+          <div className="qrpay-qr-container">
             <canvas ref={canvasRef} width={200} height={200} />
           </div>
-          <div
-            style={{ fontSize: "0.85rem", fontWeight: 600, marginBottom: 2 }}
-          >
-            {user?.name}
-          </div>
-          <div
-            style={{
-              fontSize: "0.75rem",
-              color: "var(--text3)",
-              marginBottom: "1rem",
-            }}
-          >
-            {user?.phone}
-          </div>
-          <div style={{ display: "flex", gap: 8, justifyContent: "center" }}>
+          <div className="qrpay-user-name">{user?.name}</div>
+          <div className="qrpay-user-phone">{user?.phone}</div>
+          <div className="qrpay-qr-buttons">
             <Button variant="primary" size="sm" onClick={downloadQR}>
               ↓ Download
             </Button>
@@ -208,20 +176,14 @@ export default function QRPay() {
           </div>
         </Card>
 
-        <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
+        <div className="qrpay-scan-section">
           {/* Scan & Pay */}
-          <Card>
+          <Card className="qrpay-scan-card">
             <SectionTitle>Scan & Pay</SectionTitle>
-            <div
-              style={{
-                marginBottom: 8,
-                color: "var(--text2)",
-                fontSize: "0.85rem",
-              }}
-            >
+            <div className="qrpay-scan-description">
               Use your camera to scan a FinFlow QR code.
             </div>
-            <div style={{ display: "flex", gap: 8, marginBottom: 8 }}>
+            <div className="qrpay-scan-buttons">
               <Button
                 variant="primary"
                 size="sm"
@@ -242,83 +204,32 @@ export default function QRPay() {
                 Simulate
               </Button>
             </div>
-            <video
-              ref={videoRef}
-              style={{
-                width: "100%",
-                height: 220,
-                borderRadius: 10,
-                background: "#000",
-              }}
-              playsInline
-              muted
-            />
-            <canvas ref={scanCanvasRef} style={{ display: "none" }} />
+            <video ref={videoRef} className="qrpay-video" playsInline muted />
+            <canvas ref={scanCanvasRef} className="qrpay-scan-canvas" />
           </Card>
 
           {/* Payment link */}
-          <Card>
+          <Card className="qrpay-link-card">
             <SectionTitle>Payment Link</SectionTitle>
-            <div
-              style={{
-                background: "var(--bg3)",
-                border: "1px solid var(--border)",
-                borderRadius: 8,
-                padding: "0.75rem 1rem",
-                fontSize: "0.78rem",
-                color: "var(--text2)",
-                wordBreak: "break-all",
-                marginBottom: "0.75rem",
-                lineHeight: 1.5,
-              }}
-            >
-              {payLink}
-            </div>
+            <div className="qrpay-link-display">{payLink}</div>
             <Button variant="outline" size="sm" onClick={copyLink}>
               Copy Link
             </Button>
           </Card>
 
           {/* Tips */}
-          <Card>
+          <Card className="qrpay-tips-card">
             <SectionTitle>How it works</SectionTitle>
-            <div style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+            <div className="qrpay-tips-list">
               {[
                 ["1", "Show your QR code to the payer"],
                 ["2", "They scan it with FinFlow app"],
                 ["3", "Enter amount & confirm payment"],
                 ["4", "Money credited instantly!"],
               ].map(([n, text]) => (
-                <div
-                  key={n}
-                  style={{ display: "flex", gap: 10, alignItems: "flex-start" }}
-                >
-                  <div
-                    style={{
-                      width: 22,
-                      height: 22,
-                      borderRadius: "50%",
-                      background: "rgba(108,99,255,0.2)",
-                      color: "var(--accent2)",
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      fontSize: "0.72rem",
-                      fontWeight: 700,
-                      flexShrink: 0,
-                    }}
-                  >
-                    {n}
-                  </div>
-                  <span
-                    style={{
-                      fontSize: "0.85rem",
-                      color: "var(--text2)",
-                      lineHeight: 1.5,
-                    }}
-                  >
-                    {text}
-                  </span>
+                <div key={n} className="qrpay-tip-item">
+                  <div className="qrpay-tip-number">{n}</div>
+                  <span className="qrpay-tip-text">{text}</span>
                 </div>
               ))}
             </div>
