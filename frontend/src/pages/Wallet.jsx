@@ -87,7 +87,7 @@ export default function Wallet() {
 
       <div className="wallet-container">
         {/* Wallet Balance Card */}
-        <div>
+        <div >
           <WalletCard balance={bal}>
             <div className="wallet-id">
               WALLET ID: FF-{(wallet && "WALLET") || "------"}

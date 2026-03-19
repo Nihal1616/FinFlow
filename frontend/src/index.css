@@ -319,23 +319,31 @@ select option {
   background: var(--bg);
   display: flex;
   flex-direction: column;
+  width: 100%;
+  box-sizing: border-box;
 }
 .dashboard-topbar {
   background: var(--card);
   border-bottom: 1px solid var(--border);
   padding: 0 1rem;
-  height: 64px;
+  min-height: 64px;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
+  justify-content: space-between;
   position: sticky;
   top: 0;
   z-index: 50;
+  width: 100%;
+  box-sizing: border-box;
 }
 .dashboard-actions {
   display: flex;
   align-items: center;
   gap: 10px;
+  min-width: 0;
+  max-width: 45%;
+  overflow: hidden;
+  justify-content: flex-end;
 }
 .dashboard-brand-mobile {
   display: none;
@@ -449,6 +457,7 @@ select option {
 
 .dashboard-mobile-nav {
   display: none;
+  height: 64px;
 }
 
 .mobile-nav-item {
@@ -458,13 +467,28 @@ select option {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  font-size: 0.72rem;
+  font-size: 0.68rem;
+  line-height: 1.1;
   gap: 2px;
-  width: 25%;
+  flex: 1;
+  min-width: 0;
+  max-width: 100%;
+  min-height: 56px;
   padding: 0.45rem 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
   -webkit-tap-highlight-color: transparent;
   touch-action: manipulation;
 }
+
+.mobile-nav-item span {
+  display: block;
+  max-width: 100%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
 .mobile-nav-item.active {
   color: var(--accent2);
 }
@@ -477,20 +501,45 @@ select option {
     margin-left: 0;
   }
   .dashboard-topbar {
-    padding: 0 0.75rem;
+    padding: 0.25rem 0.7rem;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.35rem;
+    min-height: 56px;
   }
   .dashboard-brand-mobile {
     display: block;
+    max-width: 65%;
+    min-width: 0;
+    overflow: hidden;
+  }
+  .dashboard-brand-mobile-name {
+    font-size: 1rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .dashboard-brand-mobile-tag {
+    font-size: 0.65rem;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
   .dashboard-actions {
     width: auto;
     justify-content: flex-end;
+    max-width: 30%;
+    min-width: 0;
+    overflow: hidden;
+    gap: 6px;
   }
   .dashboard-content {
-    padding: 1rem;
+    padding: 0.75rem;
     padding-bottom: 90px;
     overflow-x: hidden;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
   .dashboard-mobile-nav {
     display: flex;
