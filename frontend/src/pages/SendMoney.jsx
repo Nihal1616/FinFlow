@@ -9,6 +9,7 @@ import {
   SectionTitle,
   Divider,
 } from "../components/ui";
+import "./SendMoney.css";
 
 const QUICK_AMOUNTS = [100, 200, 500, 1000, 2000, 5000];
 
@@ -121,7 +122,7 @@ export default function SendMoney() {
     "₹" + Number(n).toLocaleString("en-IN", { minimumFractionDigits: 2 });
 
   return (
-    <div className="animate-fade-in">
+    <div className="animate-fade-in send-money-page">
       <h1 style={{ fontSize: "1.6rem", marginBottom: 4 }}>Send Money</h1>
       <p
         style={{
@@ -133,14 +134,7 @@ export default function SendMoney() {
         Transfer funds instantly to any FinFlow user
       </p>
 
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "1fr 1fr",
-          gap: "1.5rem",
-          maxWidth: 900,
-        }}
-      >
+      <div className="send-money-grid">
         {/* Left column */}
         <div>
           {/* Recipient search */}
@@ -297,15 +291,7 @@ export default function SendMoney() {
                 review.
               </div>
             )}
-            <div
-              style={{
-                fontFamily: "Syne, sans-serif",
-                fontSize: "2.5rem",
-                fontWeight: 800,
-                textAlign: "center",
-                padding: "0.75rem",
-              }}
-            >
+            <div className="amount-display">
               ₹{amount ? amount.toLocaleString("en-IN") : "0"}
             </div>
             <div
@@ -457,20 +443,22 @@ export default function SendMoney() {
             </div>
           </Card>
 
-          <Button
-            variant="primary"
-            full
-            loading={loading}
-            onClick={handleSend}
-            style={{
-              padding: "1rem",
-              fontSize: "1rem",
-              fontFamily: "Syne, sans-serif",
-              fontWeight: 700,
-            }}
-          >
-            ↗ Send Money
-          </Button>
+          <div className="send-button-container">
+            <Button
+              variant="primary"
+              full
+              loading={loading}
+              onClick={handleSend}
+              style={{
+                padding: "1rem",
+                fontSize: "1rem",
+                fontFamily: "Syne, sans-serif",
+                fontWeight: 700,
+              }}
+            >
+              ↗ Send Money
+            </Button>
+          </div>
         </div>
       </div>
     </div>
