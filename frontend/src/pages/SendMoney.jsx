@@ -21,9 +21,12 @@ export default function SendMoney() {
   const [recipient, setRecipient] = useState(null);
   const [amountStr, setAmountStr] = useState("");
   const [note, setNote] = useState("");
+  const [pin, setPin] = useState("");
   const [balance, setBalance] = useState(null);
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [showPinModal, setShowPinModal] = useState(false);
+  const [pinError, setPinError] = useState("");
 
   useEffect(() => {
     if (location.state?.recipient) {
@@ -38,6 +41,29 @@ export default function SendMoney() {
       .then((r) => setBalance(r.data.balance))
       .catch(() => {});
   }, []);
+
+  // Handle keyboard input for PIN modal
+  useEffect(() => {
+    if (!showPinModal) return;
+
+    const handleKeyPress = (e) => {
+      if (/^\d$/.test(e.key)) {
+        e.preventDefault();
+        addPinKey(e.key);
+      } else if (e.key === "Backspace" || e.key === "Delete") {
+        e.preventDefault();
+        delPinKey();
+      } else if (e.key === "Enter") {
+        e.preventDefault();
+        handleSend();
+      } else if (e.key === "Escape") {
+        closePinModal();
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyPress);
+    return () => window.removeEventListener("keydown", handleKeyPress);
+  }, [showPinModal, pin, loading]);
 
   const searchUsers = useCallback(async (q) => {
     setQuery(q);
@@ -81,7 +107,7 @@ export default function SendMoney() {
   const amount = parseFloat(amountStr) || 0;
   const isFraud = amount >= 10000;
 
-  const handleSend = async () => {
+  const openPinModal = () => {
     if (!recipient) {
       addToast("Please select a recipient", "error");
       return;
@@ -94,12 +120,43 @@ export default function SendMoney() {
       addToast("Insufficient wallet balance", "error");
       return;
     }
+    setPin("");
+    setPinError("");
+    setShowPinModal(true);
+  };
+
+  const closePinModal = () => {
+    setShowPinModal(false);
+    setPin("");
+    setPinError("");
+  };
+
+  const addPinKey = (k) => {
+    if (pin.length >= 6) return;
+    setPin((prev) => prev + k);
+  };
+
+  const delPinKey = () => setPin((prev) => prev.slice(0, -1));
+
+  const handleSend = async () => {
+    const trimmedPin = pin.trim();
+    if (
+      !trimmedPin ||
+      trimmedPin.length < 4 ||
+      trimmedPin.length > 6 ||
+      !/^\d+$/.test(trimmedPin)
+    ) {
+      setPinError("Enter a valid 4-6 digit UPI PIN.");
+      return;
+    }
+
     setLoading(true);
     try {
       const { data } = await api.post("/transactions/send", {
         identifier: recipient.email,
         amount,
         note,
+        pin: trimmedPin,
       });
       setBalance(data.senderBalance);
       addToast(
@@ -110,9 +167,14 @@ export default function SendMoney() {
         addToast("⚠ Large transaction flagged for review", "warning");
       setAmountStr("");
       setNote("");
+      setPin("");
       clearRecipient();
+      closePinModal();
     } catch (err) {
-      addToast(err.response?.data?.message || "Transfer failed", "error");
+      const errorMsg =
+        err.response?.data?.message || "Incorrect PIN or transfer failed.";
+      setPinError(errorMsg);
+      addToast(errorMsg, "error");
     } finally {
       setLoading(false);
     }
@@ -443,24 +505,159 @@ export default function SendMoney() {
             </div>
           </Card>
 
-          <div className="send-button-container">
-            <Button
-              variant="primary"
-              full
-              loading={loading}
-              onClick={handleSend}
+          {recipient && amount > 0 ? (
+            <div className="send-button-container">
+              <Button
+                variant="primary"
+                full
+                loading={loading}
+                onClick={openPinModal}
+                style={{
+                  padding: "1rem",
+                  fontSize: "1rem",
+                  fontFamily: "Syne, sans-serif",
+                  fontWeight: 700,
+                }}
+              >
+                ↗ Send Money
+              </Button>
+            </div>
+          ) : (
+            <div
               style={{
-                padding: "1rem",
-                fontSize: "1rem",
-                fontFamily: "Syne, sans-serif",
-                fontWeight: 700,
+                textAlign: "center",
+                color: "var(--text2)",
+                fontSize: "0.9rem",
+                padding: "2rem 1rem",
               }}
             >
-              ↗ Send Money
-            </Button>
-          </div>
+              Select a recipient and enter an amount to proceed with the
+              payment.
+            </div>
+          )}
         </div>
       </div>
+
+      {showPinModal && (
+        <div className="pin-modal-backdrop" onClick={closePinModal}>
+          <div className="pin-modal" onClick={(e) => e.stopPropagation()}>
+            <div
+              style={{
+                display: "flex",
+                justifyContent: "space-between",
+                alignItems: "center",
+                marginBottom: 16,
+              }}
+            >
+              <div>
+                <div style={{ fontSize: "1.1rem", fontWeight: 700 }}>
+                  Enter UPI PIN
+                </div>
+                <div
+                  style={{
+                    fontSize: "0.85rem",
+                    color: "var(--text3)",
+                    marginTop: 4,
+                  }}
+                >
+                  Confirm payment for {recipient?.name}
+                </div>
+              </div>
+              <button
+                onClick={closePinModal}
+                style={{
+                  background: "transparent",
+                  border: "none",
+                  fontSize: "1.35rem",
+                  cursor: "pointer",
+                  color: "var(--text2)",
+                }}
+              >
+                ×
+              </button>
+            </div>
+
+            <div style={{ marginBottom: 18 }}>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: 10,
+                }}
+              >
+                <span style={{ color: "var(--text2)", fontSize: "0.85rem" }}>
+                  Amount
+                </span>
+                <span style={{ fontWeight: 700 }}>{fmt(amount)}</span>
+              </div>
+              <div
+                style={{
+                  display: "flex",
+                  justifyContent: "space-between",
+                  marginBottom: 10,
+                }}
+              >
+                <span style={{ color: "var(--text2)", fontSize: "0.85rem" }}>
+                  To
+                </span>
+                <span style={{ fontWeight: 700 }}>{recipient?.name}</span>
+              </div>
+            </div>
+
+            <div className="pin-dots">
+              {Array.from({ length: 6 }).map((_, index) => (
+                <div key={index} className="pin-dot">
+                  {pin[index] ? "•" : ""}
+                </div>
+              ))}
+            </div>
+            {pinError && <div className="pin-error">{pinError}</div>}
+
+            <div className="pin-keypad">
+              {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((digit) => (
+                <button
+                  key={digit}
+                  type="button"
+                  className="pin-key"
+                  onClick={() => addPinKey(digit.toString())}
+                >
+                  {digit}
+                </button>
+              ))}
+              <button
+                type="button"
+                className="pin-key"
+                onClick={delPinKey}
+                style={{ fontSize: "1.1rem" }}
+              >
+                ⌫
+              </button>
+              <button
+                type="button"
+                className="pin-key"
+                onClick={() => addPinKey("0")}
+              >
+                0
+              </button>
+              <button
+                type="button"
+                className="pin-key"
+                disabled={loading}
+                onClick={handleSend}
+                style={{
+                  gridColumn: "span 3",
+                  background: "var(--accent)",
+                  color: "#fff",
+                  opacity: loading ? 0.6 : 1,
+                  cursor: loading ? "not-allowed" : "pointer",
+                }}
+              >
+                Confirm
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

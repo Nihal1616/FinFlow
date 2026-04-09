@@ -2,8 +2,40 @@ const mongoose = require("mongoose");
 const User = require("../models/User");
 const Wallet = require("../models/Wallet");
 const Transaction = require("../models/Transaction");
+const { createAndSendOTP, verifyOTP } = require("../services/otpService");
 
 const FRAUD_THRESHOLD = parseInt(process.env.FRAUD_THRESHOLD) || 10000;
+const HIGH_VALUE_THRESHOLD = 5000; // Transactions >= 5000 require OTP
+
+// POST /api/transactions/request-otp
+exports.requestTransactionOTP = async (req, res) => {
+  try {
+    const { amount } = req.body;
+
+    if (amount < HIGH_VALUE_THRESHOLD) {
+      return res.status(400).json({
+        success: false,
+        message: `OTP only required for transactions >= ₹${HIGH_VALUE_THRESHOLD}`,
+      });
+    }
+
+    const channel = "sms"; // Use SMS for transaction OTP
+    const otpData = await createAndSendOTP(
+      req.user._id,
+      channel,
+      req.user.phone,
+      "transaction",
+    );
+
+    res.json({
+      success: true,
+      message: "OTP sent to your registered phone",
+      otpData,
+    });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+};
 
 // POST /api/transactions/send
 exports.sendMoney = async (req, res) => {
@@ -11,7 +43,59 @@ exports.sendMoney = async (req, res) => {
   session.startTransaction();
 
   try {
-    const { identifier, amount, note } = req.body;
+    const { identifier, amount, note, pin, transactionOtp } = req.body;
+
+    // Check if high-value transaction requires OTP verification
+    if (amount >= HIGH_VALUE_THRESHOLD) {
+      if (!transactionOtp) {
+        await session.abortTransaction();
+        return res.status(400).json({
+          success: false,
+          requiresOtp: true,
+          message: "OTP required for this transaction amount",
+        });
+      }
+
+      try {
+        await verifyOTP(req.user._id, transactionOtp, "transaction");
+      } catch (err) {
+        await session.abortTransaction();
+        return res.status(400).json({
+          success: false,
+          message: err.message || "Invalid transaction OTP",
+        });
+      }
+    }
+
+    // Verify UPI PIN - ensure it's a string and trimmed
+    const pinStr = String(pin).trim();
+
+    if (!req.user.upiPin) {
+      return res.status(400).json({
+        success: false,
+        message:
+          "UPI PIN not set. Please set your PIN in Profile settings first.",
+      });
+    }
+
+    if (
+      !pinStr ||
+      pinStr.length < 4 ||
+      pinStr.length > 6 ||
+      !/^\d+$/.test(pinStr)
+    ) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid PIN format. PIN must be 4-6 digits.",
+      });
+    }
+
+    const isPinValid = await req.user.compareUpiPin(pinStr);
+    if (!isPinValid) {
+      return res
+        .status(400)
+        .json({ success: false, message: "Invalid UPI PIN" });
+    }
 
     // Find receiver
     const receiver = await User.findOne({

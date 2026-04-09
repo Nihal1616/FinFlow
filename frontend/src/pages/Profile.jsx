@@ -1,12 +1,16 @@
 import { useAuth } from "../context/AuthContext";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import QRCode from "qrcode";
+import api from "../services/api";
+import { useNotifications } from "../context/NotificationContext";
 import {
   Card,
   SectionTitle,
   Badge,
   Divider,
   ProgressBar,
+  FormGroup,
+  Button,
 } from "../components/ui";
 import "./Profile.css";
 
@@ -21,7 +25,38 @@ function initials(name = "") {
 
 export default function Profile() {
   const { user, logout } = useAuth();
+  const { addToast } = useNotifications();
   const qrRef = useRef(null);
+  const [upiPin, setUpiPin] = useState("");
+  const [confirmUpiPin, setConfirmUpiPin] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSetUpiPin = async () => {
+    if (
+      !upiPin ||
+      upiPin.length < 4 ||
+      upiPin.length > 6 ||
+      !/^\d+$/.test(upiPin)
+    ) {
+      addToast("PIN must be 4-6 digits", "error");
+      return;
+    }
+    if (upiPin !== confirmUpiPin) {
+      addToast("PINs do not match", "error");
+      return;
+    }
+    setLoading(true);
+    try {
+      await api.put("/users/upi-pin", { pin: upiPin });
+      addToast("UPI PIN set successfully", "success");
+      setUpiPin("");
+      setConfirmUpiPin("");
+    } catch (err) {
+      addToast(err.response?.data?.message || "Failed to set PIN", "error");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
     if (!user || !qrRef.current) return;
@@ -180,6 +215,53 @@ export default function Profile() {
               </div>
             ))}
           </div>
+
+          <Divider />
+
+          <SectionTitle>Set UPI PIN</SectionTitle>
+          <p
+            style={{
+              fontSize: "0.85rem",
+              color: "var(--text2)",
+              marginBottom: "1rem",
+            }}
+          >
+            Set a 4-6 digit PIN for secure transactions. This PIN will be
+            required for sending money.
+          </p>
+          <FormGroup label="New UPI PIN">
+            <input
+              type="password"
+              value={upiPin}
+              onChange={(e) =>
+                setUpiPin(e.target.value.replace(/\D/g, "").slice(0, 6))
+              }
+              placeholder="Enter 4-6 digit PIN"
+              maxLength={6}
+            />
+          </FormGroup>
+          <FormGroup label="Confirm UPI PIN">
+            <input
+              type="password"
+              value={confirmUpiPin}
+              onChange={(e) =>
+                setConfirmUpiPin(e.target.value.replace(/\D/g, "").slice(0, 6))
+              }
+              placeholder="Confirm PIN"
+              maxLength={6}
+            />
+          </FormGroup>
+          <Button
+            variant="primary"
+            onClick={handleSetUpiPin}
+            loading={loading}
+            style={{ marginTop: "1rem" }}
+          >
+            Set PIN
+          </Button>
+
+          <Divider />
+
           <button onClick={logout} className="profile-signout-btn">
             Sign Out
           </button>

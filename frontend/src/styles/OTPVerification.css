@@ -1,0 +1,46 @@
+.otp-verification {
+  width: 100%;
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.otp-input-group {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.otp-input-group input {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: var(--bg3);
+  color: var(--text);
+  font-family: "Courier New", monospace;
+}
+
+.otp-input-group input:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+.otp-input-group input::placeholder {
+  color: var(--text3);
+}
+
+.otp-error {
+  color: var(--red);
+  font-size: 0.85rem;
+  margin-top: 0.75rem;
+  padding: 0.75rem;
+  background: rgba(255, 87, 87, 0.1);
+  border-radius: 8px;
+  border-left: 3px solid var(--red);
+}
+
+@media (max-width: 640px) {
+  .otp-verification {
+    max-width: 100%;
+  }
+}

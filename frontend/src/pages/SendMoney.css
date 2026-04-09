@@ -21,6 +21,74 @@
   /* normal styles if needed */
 }
 
+.pin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 30, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 100;
+}
+
+.pin-modal {
+  width: min(460px, 100%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+.pin-dots {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pin-dot {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--text);
+  background: var(--bg3);
+}
+
+.pin-error {
+  color: var(--red);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.pin-key {
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  border-radius: 16px;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pin-key:hover {
+  background: var(--bg4);
+}
+
 @media (max-width: 768px) {
   .send-money-grid {
     grid-template-columns: 1fr;
