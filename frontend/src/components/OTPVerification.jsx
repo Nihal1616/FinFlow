@@ -65,22 +65,7 @@ export function OTPVerification({
         >
           {maskedTarget}
         </div>
-        {testOtp && (
-          <div
-            style={{
-              fontSize: "0.8rem",
-              color: "var(--accent)",
-              marginTop: "0.5rem",
-              fontWeight: 600,
-              backgroundColor: "var(--bg2)",
-              padding: "0.5rem",
-              borderRadius: "0.25rem",
-              border: "1px solid var(--accent)",
-            }}
-          >
-            Test OTP: {testOtp}
-          </div>
-        )}
+        
       </div>
 
       <div className="otp-input-group">
