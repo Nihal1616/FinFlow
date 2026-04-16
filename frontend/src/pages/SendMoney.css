@@ -1,0 +1,115 @@
+.send-money-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1.5rem;
+  max-width: 900px;
+}
+
+.amount-display {
+  font-family: Syne, sans-serif;
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  padding: 0.75rem;
+}
+
+.send-money-page {
+  padding-bottom: 0;
+}
+
+.send-button-container {
+  /* normal styles if needed */
+}
+
+.pin-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(10, 15, 30, 0.55);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 100;
+}
+
+.pin-modal {
+  width: min(460px, 100%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 1.5rem;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.18);
+}
+
+.pin-dots {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.pin-dot {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--text);
+  background: var(--bg3);
+}
+
+.pin-error {
+  color: var(--red);
+  font-size: 0.8rem;
+  margin-bottom: 1rem;
+}
+
+.pin-keypad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.75rem;
+}
+
+.pin-key {
+  border: 1px solid var(--border);
+  background: var(--bg3);
+  border-radius: 16px;
+  padding: 1rem 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.pin-key:hover {
+  background: var(--bg4);
+}
+
+@media (max-width: 768px) {
+  .send-money-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .amount-display {
+    font-size: 2rem;
+  }
+
+  .send-money-page {
+    padding-bottom: 5rem; /* space for fixed button */
+  }
+
+  .send-button-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: var(--bg);
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+    z-index: 10;
+  }
+}

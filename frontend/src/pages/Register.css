@@ -1,0 +1,67 @@
+/* Register Page Styles */
+
+.register-container {
+  min-height: 100vh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.register-card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 2.5rem;
+  width: 100%;
+  max-width: 420px;
+}
+
+.register-logo {
+  font-family: "Syne", sans-serif;
+  font-size: 1.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #8b85ff, #22d3a0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.25rem;
+}
+
+.register-title {
+  font-size: 1.6rem;
+  margin-bottom: 0.25rem;
+}
+
+.register-subtitle {
+  color: var(--text2);
+  margin-bottom: 2rem;
+  font-size: 0.9rem;
+}
+
+.register-button {
+  margin-top: 8px;
+}
+
+.register-signin-text {
+  text-align: center;
+  margin-top: 1.25rem;
+  font-size: 0.85rem;
+  color: var(--text2);
+}
+
+.register-signin-link {
+  color: var(--accent2);
+  text-decoration: none;
+}
+
+.register-back-text {
+  text-align: center;
+  margin-top: 0.5rem;
+}
+
+.register-back-link {
+  color: var(--text3);
+  font-size: 0.8rem;
+  text-decoration: none;
+}

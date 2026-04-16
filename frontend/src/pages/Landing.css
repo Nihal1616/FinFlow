@@ -1,0 +1,164 @@
+.landing-page {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.landing-card {
+  width: min(560px, 100%);
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 2rem;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 1.2rem;
+}
+
+.landing-logo {
+  text-align: center;
+}
+
+.landing-brand {
+  font-family: "Syne", sans-serif;
+  font-size: 2.3rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #8b85ff, #22d3a0);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-bottom: 0.3rem;
+}
+
+.landing-tag {
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 0.72rem;
+  color: var(--text3);
+}
+
+.landing-hero {
+  text-align: center;
+}
+
+.landing-title {
+  font-family: "Syne", sans-serif;
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin-bottom: 0.45rem;
+}
+
+.landing-description {
+  margin: 0 auto;
+  color: var(--text2);
+  line-height: 1.7;
+  max-width: 100%;
+  font-size: 0.95rem;
+}
+
+.landing-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 0.65rem;
+  align-items: center;
+}
+
+.btn-primary,
+.btn-secondary {
+  border-radius: 10px;
+  padding: 0.95rem 1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+  border: none;
+  text-align: center;
+  align-items: center;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  width: 40%;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid var(--border2);
+  color: var(--text2);
+  width: 40%;
+}
+
+.btn-primary:hover,
+.btn-secondary:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.08);
+}
+
+.landing-divider {
+  background: var(--border);
+  height: 1px;
+  width: 100%;
+  margin: 0.8rem 0;
+}
+
+.landing-highlights {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.5rem;
+  text-align: center;
+}
+
+.highlight-card {
+  padding: 0.3rem 0;
+}
+
+.highlight-value {
+  font-weight: 700;
+  font-family: "Syne", sans-serif;
+  color: var(--accent2);
+  font-size: 1.05rem;
+}
+
+.highlight-label {
+  font-size: 0.72rem;
+  color: var(--text3);
+  margin-top: 0.2rem;
+}
+
+@media (max-width: 768px) {
+  .landing-page {
+    padding: 1rem;
+    justify-content: flex-start;
+  }
+
+  .landing-card {
+    width: 100%;
+    border-radius: 16px;
+    padding: 1rem;
+  }
+
+  .landing-brand {
+    font-size: 2rem;
+  }
+
+  .landing-title {
+    font-size: 1.35rem;
+  }
+
+  .landing-description {
+    font-size: 0.88rem;
+  }
+
+  .landing-highlights {
+    grid-template-columns: 1fr;
+  }
+  .btn-primary{
+    width: 50%;
+  }
+}

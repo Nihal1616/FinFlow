@@ -1,0 +1,13 @@
+{
+  "name": "finflow",
+  "version": "1.0.0",
+  "description": "FinFlow - Secure Digital Payment Platform",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../frontend && npm install",
+    "dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
+    "build": "cd frontend && npm run build"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
